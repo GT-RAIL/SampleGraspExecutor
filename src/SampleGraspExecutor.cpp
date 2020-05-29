@@ -7,9 +7,9 @@ SampleGraspExecutor::SampleGraspExecutor() :
     pickup_server(pnh, "execute_grasp", boost::bind(&SampleGraspExecutor::executeGraspCallback, this, _1), false)
 {
   //read in parameters
-  string gripper_client;
+  string gripper_client_name;
   pnh.param<string>("move_group_name", move_group_name, "arm");
-  pnh.param<string>("gripper_client", gripper_client, "gripper_actions/gripper_manipulation");
+  pnh.param<string>("gripper_client", gripper_client_name, "gripper_actions/gripper_manipulation");
 
   // set up link names
   gripper_names.push_back("robotiq_85_base_link");
@@ -30,7 +30,7 @@ SampleGraspExecutor::SampleGraspExecutor() :
   planning_scene_client = n.serviceClient<moveit_msgs::GetPlanningScene>("/get_planning_scene");
 
   //actionlib
-  gripper_client = new actionlib::SimpleActionClient<rail_manipulation_msgs::GripperAction>(gripper_client);
+  gripper_client = new actionlib::SimpleActionClient<rail_manipulation_msgs::GripperAction>(gripper_client_name);
 
   arm_group = new moveit::planning_interface::MoveGroupInterface(move_group_name);
   arm_group->startStateMonitor();

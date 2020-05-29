@@ -10,6 +10,7 @@
 #include <moveit/planning_scene_monitor/planning_scene_monitor.h>
 #include <moveit_msgs/GetCartesianPath.h>
 #include <moveit_msgs/GetPlanningScene.h>
+#include <rail_manipulation_msgs/GripperAction.h>
 #include <rail_manipulation_msgs/PickupAction.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2_ros/buffer.h>
@@ -43,7 +44,7 @@ private:
 
   // actionlib
   actionlib::SimpleActionServer<rail_manipulation_msgs::PickupAction> pickup_server;
-  actionlib::SimpleActionClient<rail_manipulation_msgs::GripperAction> gripper_client;
+  actionlib::SimpleActionClient<rail_manipulation_msgs::GripperAction> *gripper_client;
 
   // MoveIt! interfaces
   moveit::planning_interface::MoveGroupInterface *arm_group;
