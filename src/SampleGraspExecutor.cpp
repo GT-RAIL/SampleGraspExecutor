@@ -30,6 +30,8 @@ SampleGraspExecutor::SampleGraspExecutor() :
   planning_scene_client = n.serviceClient<moveit_msgs::GetPlanningScene>("/get_planning_scene");
 
   //actionlib
+  // TODO: this may change for your gripper; we use the interface provided by GT-RAIL/robotiq_85_gripper_actions
+  // TODO: and GT-RAIL/robotiq_85_gripper
   gripper_client = new actionlib::SimpleActionClient<rail_manipulation_msgs::GripperAction>(gripper_client_name);
 
   arm_group = new moveit::planning_interface::MoveGroupInterface(move_group_name);
