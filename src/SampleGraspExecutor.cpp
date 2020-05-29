@@ -47,7 +47,7 @@ SampleGraspExecutor::~SampleGraspExecutor()
   delete planning_scene_interface;
 }
 
-void SampleGraspExecutor::executeGraspCallback(const rail_manipulation_msgs::PickupActionGoalConstPtr &goal)
+void SampleGraspExecutor::executeGraspCallback(const rail_manipulation_msgs::PickupGoalConstPtr &goal)
 {
   rail_manipulation_msgs::PickupResult result;
 
@@ -199,7 +199,7 @@ void SampleGraspExecutor::executeGraspCallback(const rail_manipulation_msgs::Pic
   moveit::planning_interface::MoveGroupInterface::Plan grasp_plan;
   grasp_plan.trajectory_ = grasp_path.response.solution;
   moveit::core::robotStateToRobotStateMsg(*(arm_group->getCurrentState()), grasp_plan.start_state_);
-  int error_code = arm_group->execute(grasp_plan).val;
+  error_code = arm_group->execute(grasp_plan).val;
   if (error_code == moveit_msgs::MoveItErrorCodes::PREEMPTED)
   {
     ROS_INFO("Preempted while moving to executing grasp.");

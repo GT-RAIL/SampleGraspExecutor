@@ -33,7 +33,7 @@ public:
   ~SampleGraspExecutor();
 
 private:
-  void executeGraspCallback(const rail_manipulation_msgs::PickupActionGoalConstPtr &goal);
+  void executeGraspCallback(const rail_manipulation_msgs::PickupGoalConstPtr &goal);
 
   ros::NodeHandle n;
   ros::NodeHandle pnh;
