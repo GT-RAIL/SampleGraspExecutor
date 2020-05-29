@@ -8,8 +8,11 @@
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 #include <moveit/planning_scene_monitor/planning_scene_monitor.h>
+#include <moveit/robot_state/conversions.h>
 #include <moveit_msgs/GetCartesianPath.h>
 #include <moveit_msgs/GetPlanningScene.h>
+#include <moveit_msgs/RobotTrajectory.h>
+#include <moveit_msgs/MoveItErrorCodes.h>
 #include <rail_manipulation_msgs/GripperAction.h>
 #include <rail_manipulation_msgs/PickupAction.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>

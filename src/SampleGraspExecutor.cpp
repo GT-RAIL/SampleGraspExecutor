@@ -34,7 +34,6 @@ SampleGraspExecutor::SampleGraspExecutor() :
 
   arm_group = new moveit::planning_interface::MoveGroupInterface(move_group_name);
   arm_group->startStateMonitor();
-  arm_group->setMaxVelocityScalingFactor(MAX_VELOCITY_SCALING_FACTOR);
 
   planning_scene_interface = new moveit::planning_interface::PlanningSceneInterface();
 
@@ -108,8 +107,8 @@ void SampleGraspExecutor::executeGraspCallback(const rail_manipulation_msgs::Pic
   arm_group->setPoseTarget(transformed_approach_pose);
 
   //send the goal, and also check for preempts
-  result.error_code = arm_group->move().val;
-  if (result.error_code == moveit_msgs::MoveItErrorCodes::PREEMPTED)
+  int error_code = arm_group->move().val;
+  if (error_code == moveit_msgs::MoveItErrorCodes::PREEMPTED)
   {
     ROS_INFO("Preempted while moving to approach pose.");
     result.success = false;
@@ -117,7 +116,7 @@ void SampleGraspExecutor::executeGraspCallback(const rail_manipulation_msgs::Pic
     pickup_server.setPreempted(result);
     return;
   }
-  else if (result.error_code != moveit_msgs::MoveItErrorCodes::SUCCESS)
+  else if (error_code != moveit_msgs::MoveItErrorCodes::SUCCESS)
   {
     ROS_INFO("Failed to move to approach pose.");
     result.success = false;
@@ -131,9 +130,9 @@ void SampleGraspExecutor::executeGraspCallback(const rail_manipulation_msgs::Pic
   // TODO: change to appropriate gripper command for your hardware
   rail_manipulation_msgs::GripperGoal gripper_goal;
   gripper_goal.close = false;
-  gripper_client.sendGoal(gripper_goal);
-  gripper_client.waitForResult(ros::Duration(10.0));
-  if (!gripper_client.getResult()->success)
+  gripper_client->sendGoal(gripper_goal);
+  gripper_client->waitForResult(ros::Duration(10.0));
+  if (!gripper_client->getResult()->success)
   {
     ROS_INFO("Opening gripper failed.");
     result.success = false;
@@ -200,8 +199,8 @@ void SampleGraspExecutor::executeGraspCallback(const rail_manipulation_msgs::Pic
   moveit::planning_interface::MoveGroupInterface::Plan grasp_plan;
   grasp_plan.trajectory_ = grasp_path.response.solution;
   moveit::core::robotStateToRobotStateMsg(*(arm_group->getCurrentState()), grasp_plan.start_state_);
-  result.error_code = arm_group->execute(grasp_plan).val;
-  if (result.error_code == moveit_msgs::MoveItErrorCodes::PREEMPTED)
+  int error_code = arm_group->execute(grasp_plan).val;
+  if (error_code == moveit_msgs::MoveItErrorCodes::PREEMPTED)
   {
     ROS_INFO("Preempted while moving to executing grasp.");
     result.executionSuccess = false;
@@ -209,7 +208,7 @@ void SampleGraspExecutor::executeGraspCallback(const rail_manipulation_msgs::Pic
     pickup_server.setAborted(result);
     return;
   }
-  else if (result.error_code != moveit_msgs::MoveItErrorCodes::SUCCESS)
+  else if (error_code != moveit_msgs::MoveItErrorCodes::SUCCESS)
   {
     ROS_INFO("Failed to move to execute grasp.");
     result.executionSuccess = false;
@@ -221,9 +220,9 @@ void SampleGraspExecutor::executeGraspCallback(const rail_manipulation_msgs::Pic
   //STEP 6: Close gripper
   // TODO: change to appropriate gripper command for your hardware
   gripper_goal.close = true;
-  gripper_client.sendGoal(gripper_goal);
-  gripper_client.waitForResult(ros::Duration(10.0));
-  if (!gripper_client.getResult()->success)
+  gripper_client->sendGoal(gripper_goal);
+  gripper_client->waitForResult(ros::Duration(10.0));
+  if (!gripper_client->getResult()->success)
   {
     ROS_INFO("Closing gripper failed.");
     result.success = false;
@@ -234,7 +233,7 @@ void SampleGraspExecutor::executeGraspCallback(const rail_manipulation_msgs::Pic
 
   //DONE
   result.success = true;
-  result.executionSuccess = true
+  result.executionSuccess = true;
   pickup_server.setSucceeded(result);
 }
 
