@@ -12,6 +12,8 @@ SampleGraspExecutor::SampleGraspExecutor() :
   pnh.param<string>("gripper_client", gripper_client_name, "gripper_actions/gripper_manipulation");
 
   // set up link names
+  // TODO: This may need to be changed for your specific gripper hardware.  It's used to allow the gripper to make contact
+  // TODO: with objects in the environment for grasping.
   gripper_names.push_back("robotiq_85_base_link");
   gripper_names.push_back("robotiq_85_left_finger_link");
   gripper_names.push_back("robotiq_85_left_finger_tip_link");
