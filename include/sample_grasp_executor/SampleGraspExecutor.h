@@ -41,6 +41,9 @@ private:
   // topics
   ros::Publisher planning_scene_publisher;
 
+  ros::Publisher approach_debug_pub;
+  ros::Publisher grasp_debug_pub;
+
   // services
   ros::ServiceClient compute_cartesian_path_client;
   ros::ServiceClient planning_scene_client;
