@@ -27,8 +27,8 @@ SampleGraspExecutor::SampleGraspExecutor() :
   // topics
   planning_scene_publisher = n.advertise<moveit_msgs::PlanningScene>("/planning_scene", 1);
 
-  approach_debug_pub = pnh.advertise<geometry_msgs::PoseStamped>("approach_pose");
-  grasp_debug_pub = pnh.advertise<geometry_msgs::PoseStamped>("grasp_pose");
+  approach_debug_pub = pnh.advertise<geometry_msgs::PoseStamped>("approach_pose", 1);
+  grasp_debug_pub = pnh.advertise<geometry_msgs::PoseStamped>("grasp_pose", 1);
 
   // services
   compute_cartesian_path_client = n.serviceClient<moveit_msgs::GetCartesianPath>("/compute_cartesian_path");
