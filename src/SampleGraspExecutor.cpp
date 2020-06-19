@@ -60,7 +60,8 @@ void SampleGraspExecutor::executeGraspCallback(const rail_manipulation_msgs::Pic
 
   // STEP 1: set all poses in appropriate reference frames that we'll need
 
-  string group_reference_frame = arm_group->getPoseReferenceFrame();
+//  string group_reference_frame = arm_group->getPoseReferenceFrame();
+  string group_reference_frame = "world_frame";
 
   //transform pose to reference group coordinate frame (fixes an annoying bug that spams warnings to the terminal...)
   geometry_msgs::PoseStamped grasp_pose;
