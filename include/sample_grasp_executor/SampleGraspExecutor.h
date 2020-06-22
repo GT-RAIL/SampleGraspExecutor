@@ -5,6 +5,7 @@
 #include <ros/ros.h>
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/server/simple_action_server.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 #include <moveit/planning_scene_monitor/planning_scene_monitor.h>
@@ -40,6 +41,9 @@ private:
 
   // topics
   ros::Publisher planning_scene_publisher;
+
+  ros::Publisher approach_debug_pub;
+  ros::Publisher grasp_debug_pub;
 
   // services
   ros::ServiceClient compute_cartesian_path_client;

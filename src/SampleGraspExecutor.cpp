@@ -27,6 +27,9 @@ SampleGraspExecutor::SampleGraspExecutor() :
   // topics
   planning_scene_publisher = n.advertise<moveit_msgs::PlanningScene>("/planning_scene", 1);
 
+  approach_debug_pub = pnh.advertise<geometry_msgs::PoseStamped>("approach_pose", 1);
+  grasp_debug_pub = pnh.advertise<geometry_msgs::PoseStamped>("grasp_pose", 1);
+
   // services
   compute_cartesian_path_client = n.serviceClient<moveit_msgs::GetCartesianPath>("/compute_cartesian_path");
   planning_scene_client = n.serviceClient<moveit_msgs::GetPlanningScene>("/get_planning_scene");
@@ -58,6 +61,7 @@ void SampleGraspExecutor::executeGraspCallback(const rail_manipulation_msgs::Pic
   // STEP 1: set all poses in appropriate reference frames that we'll need
 
   string group_reference_frame = arm_group->getPoseReferenceFrame();
+//  string group_reference_frame = "world_frame";  // Note: code for debugging without hardware/simulated execution
 
   //transform pose to reference group coordinate frame (fixes an annoying bug that spams warnings to the terminal...)
   geometry_msgs::PoseStamped grasp_pose;
@@ -87,18 +91,24 @@ void SampleGraspExecutor::executeGraspCallback(const rail_manipulation_msgs::Pic
   tf_broadcaster.sendTransform(grasp_transform);
 
   //calculate grasp pose in frame from goal grasp pose
+  geometry_msgs::PoseStamped grasp_execution_pose;
+  grasp_execution_pose.header.frame_id = "grasp_execution_frame";
+  grasp_execution_pose.pose.orientation.w = 1.0;
+
   geometry_msgs::TransformStamped from_grasp_transform =
       tf_buffer.lookupTransform(group_reference_frame, "grasp_execution_frame", current_time, ros::Duration(3.0));
   geometry_msgs::PoseStamped transformed_grasp_pose;
   transformed_grasp_pose.header.frame_id = group_reference_frame;
-  tf2::doTransform(grasp_pose, transformed_grasp_pose, from_grasp_transform);
+  tf2::doTransform(grasp_execution_pose, transformed_grasp_pose, from_grasp_transform);
 
   //calculate approach pose from goal grasp pose
-  grasp_pose.pose.position.x -= 0.12;
+  grasp_execution_pose.pose.position.x -= 0.12;
   geometry_msgs::PoseStamped transformed_approach_pose;
   transformed_approach_pose.header.frame_id = group_reference_frame;
-  tf2::doTransform(grasp_pose, transformed_approach_pose, from_grasp_transform);
+  tf2::doTransform(grasp_execution_pose, transformed_approach_pose, from_grasp_transform);
 
+  approach_debug_pub.publish(transformed_approach_pose);
+  grasp_debug_pub.publish(transformed_grasp_pose);
 
   // STEP 2: Plan and move to the grasp approach pose
 
