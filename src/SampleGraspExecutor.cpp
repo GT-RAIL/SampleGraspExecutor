@@ -39,10 +39,10 @@ SampleGraspExecutor::SampleGraspExecutor() :
   // TODO: and GT-RAIL/robotiq_85_gripper
   gripper_client = new actionlib::SimpleActionClient<rail_manipulation_msgs::GripperAction>(gripper_client_name);
 
-//  arm_group = new moveit::planning_interface::MoveGroupInterface(move_group_name);
-//  arm_group->startStateMonitor();
-//
-//  planning_scene_interface = new moveit::planning_interface::PlanningSceneInterface();
+  arm_group = new moveit::planning_interface::MoveGroupInterface(move_group_name);
+  arm_group->startStateMonitor();
+
+  planning_scene_interface = new moveit::planning_interface::PlanningSceneInterface();
 
   pickup_server.start();
 }
