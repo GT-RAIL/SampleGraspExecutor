@@ -10,6 +10,7 @@ SampleGraspExecutor::SampleGraspExecutor() :
   string gripper_client_name;
   pnh.param<string>("move_group_name", move_group_name, "arm");
   pnh.param<string>("gripper_client", gripper_client_name, "gripper_actions/gripper_manipulation");
+  pnh.param<bool>("z_forward", z_forward, true);
 
   // set up link names
   // TODO: This may need to be changed for your specific gripper hardware.  It's used to allow the gripper to make contact
@@ -71,10 +72,11 @@ void SampleGraspExecutor::executeGraspCallback(const rail_manipulation_msgs::Pic
     grasp_pose.header.frame_id = group_reference_frame;
 
     geometry_msgs::TransformStamped group_to_grasp_transform = tf_buffer.lookupTransform(group_reference_frame,
-                                                                                          goal->pose.header.frame_id, ros::Time(0), ros::Duration(1.0));
+                                                                                         goal->pose.header.frame_id,
+                                                                                         ros::Time(0),
+                                                                                         ros::Duration(1.0));
     tf2::doTransform(goal->pose, grasp_pose, group_to_grasp_transform);
-  }
-  else
+  } else
   {
     grasp_pose = goal->pose;
   }
@@ -93,7 +95,15 @@ void SampleGraspExecutor::executeGraspCallback(const rail_manipulation_msgs::Pic
   //calculate grasp pose in frame from goal grasp pose
   geometry_msgs::PoseStamped grasp_execution_pose;
   grasp_execution_pose.header.frame_id = "grasp_execution_frame";
-  grasp_execution_pose.pose.orientation.w = 1.0;
+  if (z_forward)  // necessary for the eef coordinate frame for the GEN3 JACO
+  {
+    grasp_execution_pose.pose.orientation.w = 0.7071;
+    grasp_execution_pose.pose.orientation.y = 0.7071;
+  }
+  else
+  {
+    grasp_execution_pose.pose.orientation.w = 1.0;
+  }
 
   geometry_msgs::TransformStamped from_grasp_transform =
       tf_buffer.lookupTransform(group_reference_frame, "grasp_execution_frame", current_time, ros::Duration(3.0));

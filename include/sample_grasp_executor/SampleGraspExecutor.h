@@ -66,6 +66,9 @@ private:
   // collision tracking
   std::vector<std::string> gripper_names;
   std::vector<std::string> attached_objects;
+
+  // eef rotation adjustment
+  bool z_forward;
 };
 
 #endif  // SAMPLE_GRASP_EXECUTOR_H_
